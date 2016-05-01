@@ -37,6 +37,7 @@ int main(int argc, char* argv[]){
 
     for(;;){
          connfd = accept(listenfd,(struct sockaddr*)&connaddr,&connaddr_len);
+         printf("connect from %s:%d\n", inet_ntoa(connaddr.sin_addr),htons(connaddr.sin_port));
          if(connfd == -1){
               errMsg("connect");
               exit(-1);
@@ -46,6 +47,7 @@ int main(int argc, char* argv[]){
              //echo str
              str_echo(connfd);
              close(connfd);
+             printf("connection closed!\n");
          }
          close(connfd);
     }
@@ -60,10 +62,12 @@ void str_echo(int connfd){
     int n;
 again:
     while((n = read(connfd,buf,BUFSIZE)) > 0){
+       //printf("read %d bytes from peer\n", n);
        int ret =  writen(connfd,buf,n);
        if(ret == -1){
            break;
        }
+       //printf("write %d bytes to peer\n", ret);
     }
     if(n < 0 && errno == EINTR){//read was interrupted
         goto again;
