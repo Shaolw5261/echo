@@ -12,6 +12,8 @@
 #define LISTENQ 200
 int writen(int socketfd, char* buf, int n);
 
+int readn(int fd, char* buf, int n);
+
 
 #endif
 
