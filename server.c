@@ -1,16 +1,20 @@
 #include "unp.h"
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "myerror.h"
+#include <signal.h>
 
 #define PORT 8687
 #define BUFSIZE 1000
 
 void str_echo(int);
+void sig_child(int sig);
 
 int main(int argc, char* argv[]){
     int listenfd; //server socket file descriptor
     int connfd;
+
+    signal(SIGCHLD,sig_child);
     struct sockaddr_in servaddr;
     struct sockaddr_in connaddr;
     socklen_t connaddr_len;
@@ -48,6 +52,7 @@ int main(int argc, char* argv[]){
              str_echo(connfd);
              close(connfd);
              printf("connection closed!\n");
+             exit(0);
          }
          close(connfd);
     }
@@ -75,4 +80,13 @@ again:
     else if(n < 0){
         errMsg("read");
     }
+}
+
+void sig_child(int sig){
+     pid_t pid;
+     int stat;
+     //pid = wait(&stat);
+     while((pid = waitpid(-1, &stat, WNOHANG)) > 0)
+         printf("child %d terminated\n", pid);
+     return;
 }

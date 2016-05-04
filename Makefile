@@ -8,7 +8,7 @@ server:$(server_obj)
 
 server.o: unp.h
 
-client_obj = client.o myerror.c unp.o
+client_obj = client.o myerror.o unp.o
 
 client:$(client_obj)
 	gcc $(client_obj) -o client

@@ -48,4 +48,6 @@ again:
         printf("%s", buf);
         printf(">>");
     }
+    exit(0);
 }
+
